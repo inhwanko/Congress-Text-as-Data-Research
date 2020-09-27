@@ -1,0 +1,526 @@
+---
+title: "2nd coding"
+author: "Inhwan Ko"
+date: 'July 21, 2020'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Load necessary packages
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(tidytext)
+library(readxl)
+library(quanteda)
+library(readtext)
+library(ggplot2)
+library(rvest)
+
+```
+
+
+# 2. Load 13th data and match party-legislator per each bill
+
+```{r, warning=F, message=F}
+bill_13 <- read_excel("bill_13.xlsx")
+
+legislator_13 <- read_excel("legislator_13.xlsx")
+legislator_13$party[legislator_13$party=="평화민주당"] <- "party1"
+legislator_13$party[legislator_13$party=="통일민주당"] <- "party2"
+legislator_13$party[legislator_13$party=="민주자유당"] <- "party3"
+legislator_13$party[legislator_13$party=="민주정의당"] <- "party4"
+legislator_13$party[legislator_13$party=="신민주공화당"] <- "party5"
+legislator_13$party[legislator_13$party=="한겨레민주당평화민주당"] <- "party6"
+legislator_13$party[legislator_13$party=="무소속"] <- "noparty"
+
+# Transform each submitter and supporter into string vectors
+bill_13$submitter_text <- strsplit(bill_13$submitter_text, " ")
+bill_13$supporter_text <- strsplit(bill_13$supporter_text, " ")
+bill_13$legislator <- strsplit(bill_13$legislator, " ")
+
+bill_13$noparty <- bill_13$party6 <- bill_13$party5 <- bill_13$party4 <- bill_13$party3 <- bill_13$party2 <- bill_13$party1 <- 0
+bill_13$mainparty <- NA
+
+bill_13 <- as.data.frame(bill_13)
+
+for (i in 1:70) {
+bill_13_legislator <- as.data.frame(unlist(bill_13$legislator[i]))
+colnames(bill_13_legislator) <- "name"
+
+bill_13_main <- as.data.frame(unlist(bill_13$submitter_text[i]))
+colnames(bill_13_main) <- "name"
+
+leftjoined <- left_join(bill_13_legislator, legislator_13[,3:4], by="name")
+leftjoined_main <- left_join(bill_13_main, legislator_13[,3:4], by="name")
+
+match <- leftjoined %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+match_main <- leftjoined_main %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+bill_13[i,]$mainparty <- match_main[1,]$party
+try(bill_13[i,]$party1 <- match$n[match$party=="party1"], silent=T)
+try(bill_13[i,]$party2 <- match$n[match$party=="party2"], silent=T)
+try(bill_13[i,]$party3 <- match$n[match$party=="party3"], silent=T)
+try(bill_13[i,]$party4 <- match$n[match$party=="party4"], silent=T)
+try(bill_13[i,]$party5 <- match$n[match$party=="party5"], silent=T)
+try(bill_13[i,]$party6 <- match$n[match$party=="party6"], silent=T)
+try(bill_13[i,]$noparty <- match$n[match$party=="noparty"], silent=T)
+}
+
+write.csv(bill_13[,c(-4,-5,-6)], "bill_13_final.csv")
+```
+
+# 3. Load 14th data and match party-legislator per each bill
+
+```{r, warning=F, message=F}
+bill_14 <- read_excel("bill_14.xlsx")
+
+legislator_14 <- read_excel("legislator_14.xlsx")
+legislator_14$party[legislator_14$party=="민주당"] <- "party1"
+legislator_14$party[legislator_14$party=="민주자유당"] <- "party2"
+legislator_14$party[legislator_14$party=="신민당"] <- "party3"
+legislator_14$party[legislator_14$party=="신정치개혁당"] <- "party4"
+legislator_14$party[legislator_14$party=="통일민국당"] <- "party5"
+
+legislator_14$party[legislator_14$party=="무소속"] <- "noparty"
+
+# Transform each submitter and supporter into string vectors
+bill_14$submitter_text <- strsplit(bill_14$submitter_text, " ")
+bill_14$supporter_text <- strsplit(bill_14$supporter_text, " ")
+bill_14$legislator <- strsplit(bill_14$legislator, " ")
+
+bill_14$noparty <- bill_14$party5 <- bill_14$party4 <- bill_14$party3 <- bill_14$party2 <- bill_14$party1 <- 0
+bill_14$mainparty <- NA
+
+bill_14 <- as.data.frame(bill_14)
+
+for (i in 1:8) {
+bill_14_legislator <- as.data.frame(unlist(bill_14$legislator[i]))
+colnames(bill_14_legislator) <- "name"
+
+bill_14_main <- as.data.frame(unlist(bill_14$submitter_text[i]))
+colnames(bill_14_main) <- "name"
+
+leftjoined <- left_join(bill_14_legislator, legislator_14[,3:4], by="name")
+leftjoined_main <- left_join(bill_14_main, legislator_14[,3:4], by="name")
+
+match <- leftjoined %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+match_main <- leftjoined_main %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+try(bill_14[i,]$mainparty <- match_main[1,]$party, silent=T)
+try(bill_14[i,]$party1 <- match$n[match$party=="party1"], silent=T)
+try(bill_14[i,]$party2 <- match$n[match$party=="party2"], silent=T)
+try(bill_14[i,]$party3 <- match$n[match$party=="party3"], silent=T)
+try(bill_14[i,]$party4 <- match$n[match$party=="party4"], silent=T)
+try(bill_14[i,]$party5 <- match$n[match$party=="party5"], silent=T)
+try(bill_14[i,]$noparty <- match$n[match$party=="noparty"], silent=T)
+}
+
+write.csv(bill_14[,c(-4,-5,-6)], "bill_14_final.csv")
+```
+
+# 4. Load 15th data and match party-legislator per each bill
+
+```{r, warning=F, message=F}
+bill_15 <- read_excel("bill_15.xlsx")
+
+legislator_15 <- read_excel("legislator_15.xlsx")
+legislator_15$party[legislator_15$party=="새정치국민회의"] <- "party1"
+legislator_15$party[legislator_15$party=="신한국당"] <- "party2"
+legislator_15$party[legislator_15$party=="자유민주연합"] <- "party3"
+legislator_15$party[legislator_15$party=="통합민주당"] <- "party4"
+legislator_15$party[legislator_15$party=="한나라당"] <- "party5"
+
+legislator_15$party[legislator_15$party=="무소속"] <- "noparty"
+
+# Transform each submitter and supporter into string vectors
+bill_15$submitter_text <- strsplit(bill_15$submitter_text, " ")
+bill_15$supporter_text <- strsplit(bill_15$supporter_text, " ")
+bill_15$legislator <- strsplit(bill_15$legislator, " ")
+
+bill_15$noparty <- bill_15$party5 <- bill_15$party4 <- bill_15$party3 <- bill_15$party2 <- bill_15$party1 <- 0
+bill_15$mainparty <- NA
+
+bill_15 <- as.data.frame(bill_15)
+
+for (i in 1:59) {
+bill_15_legislator <- as.data.frame(unlist(bill_15$legislator[i]))
+colnames(bill_15_legislator) <- "name"
+
+bill_15_main <- as.data.frame(unlist(bill_15$submitter_text[i]))
+colnames(bill_15_main) <- "name"
+
+leftjoined <- left_join(bill_15_legislator, legislator_15[,3:4], by="name")
+leftjoined_main <- left_join(bill_15_main, legislator_15[,3:4], by="name")
+
+match <- leftjoined %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+match_main <- leftjoined_main %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+try(bill_15[i,]$mainparty <- match_main[1,]$party, silent=T)
+try(bill_15[i,]$party1 <- match$n[match$party=="party1"], silent=T)
+try(bill_15[i,]$party2 <- match$n[match$party=="party2"], silent=T)
+try(bill_15[i,]$party3 <- match$n[match$party=="party3"], silent=T)
+try(bill_15[i,]$party4 <- match$n[match$party=="party4"], silent=T)
+try(bill_15[i,]$party5 <- match$n[match$party=="party5"], silent=T)
+try(bill_15[i,]$noparty <- match$n[match$party=="noparty"], silent=T)
+}
+
+write.csv(bill_15[,c(-4,-5,-6)], "bill_15_final.csv")
+```
+
+
+# 5. Load 16th data and match party-legislator per each bill
+
+```{r, warning=F, message=F}
+bill_16 <- read_excel("bill_16.xlsx")
+
+legislator_16 <- read_excel("legislator_16.xlsx")
+legislator_16$party[legislator_16$party=="개혁국민정당"] <- "party1"
+legislator_16$party[legislator_16$party=="민주국민당"] <- "party2"
+legislator_16$party[legislator_16$party=="새천년민주당"] <- "party3"
+legislator_16$party[legislator_16$party=="자유민주연합"] <- "party4"
+legislator_16$party[legislator_16$party=="한나라당"] <- "party5"
+legislator_16$party[legislator_16$party=="희망의 한국신당"] <- "party6"
+
+legislator_16$party[legislator_16$party=="무소속"] <- "noparty"
+
+# Transform each submitter and supporter into string vectors
+bill_16$submitter_text <- strsplit(bill_16$submitter_text, " ")
+bill_16$supporter_text <- strsplit(bill_16$supporter_text, " ")
+bill_16$legislator <- strsplit(bill_16$legislator, " ")
+
+bill_16$noparty <- bill_16$party6 <- bill_16$party5 <- bill_16$party4 <- bill_16$party3 <- bill_16$party2 <- bill_16$party1 <- 0
+bill_16$mainparty <- NA
+
+bill_16 <- as.data.frame(bill_16)
+
+for (i in 1:214) {
+bill_16_legislator <- as.data.frame(unlist(bill_16$legislator[i]))
+colnames(bill_16_legislator) <- "name"
+
+bill_16_main <- as.data.frame(unlist(bill_16$submitter_text[i]))
+colnames(bill_16_main) <- "name"
+
+leftjoined <- left_join(bill_16_legislator, legislator_16[,3:4], by="name")
+leftjoined_main <- left_join(bill_16_main, legislator_16[,3:4], by="name")
+
+match <- leftjoined %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+match_main <- leftjoined_main %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+try(bill_16[i,]$mainparty <- match_main[1,]$party, silent=T)
+try(bill_16[i,]$party1 <- match$n[match$party=="party1"], silent=T)
+try(bill_16[i,]$party2 <- match$n[match$party=="party2"], silent=T)
+try(bill_16[i,]$party3 <- match$n[match$party=="party3"], silent=T)
+try(bill_16[i,]$party4 <- match$n[match$party=="party4"], silent=T)
+try(bill_16[i,]$party5 <- match$n[match$party=="party5"], silent=T)
+try(bill_16[i,]$party6 <- match$n[match$party=="party6"], silent=T)
+try(bill_16[i,]$noparty <- match$n[match$party=="noparty"], silent=T)
+}
+
+write.csv(bill_16[,c(-4,-5,-6)], "bill_16_final.csv")
+```
+
+# 6. Load 17th data and match party-legislator per each bill
+
+```{r, warning=F, message=F}
+bill_17 <- read_excel("bill_17.xlsx")
+
+legislator_17 <- read_excel("legislator_17.xlsx")
+legislator_17$party[legislator_17$party=="국민중심당"] <- "party1"
+legislator_17$party[legislator_17$party=="국민통합21"] <- "party2"
+legislator_17$party[legislator_17$party=="대통합민주신당"] <- "party3"
+legislator_17$party[legislator_17$party=="민주노동당"] <- "party4"
+legislator_17$party[legislator_17$party=="민주당"] <- "party5"
+legislator_17$party[legislator_17$party=="새천년민주당"] <- "party6"
+legislator_17$party[legislator_17$party=="열린우리당"] <- "party7"
+legislator_17$party[legislator_17$party=="자유민주연합"] <- "party8"
+legislator_17$party[legislator_17$party=="통합민주당"] <- "party9"
+legislator_17$party[legislator_17$party=="한나라당"] <- "party10"
+
+
+legislator_17$party[legislator_17$party=="무소속"] <- "noparty"
+
+# Transform each submitter and supporter into string vectors
+bill_17$submitter_text <- strsplit(bill_17$submitter_text, " ")
+bill_17$supporter_text <- strsplit(bill_17$supporter_text, " ")
+bill_17$legislator <- strsplit(bill_17$legislator, " ")
+
+bill_17$noparty <- bill_17$party10 <- bill_17$party9 <- bill_17$party8 <- bill_17$party7 <- bill_17$party6 <- bill_17$party5 <- bill_17$party4 <- bill_17$party3 <- bill_17$party2 <- bill_17$party1 <- 0
+bill_17$mainparty <- NA
+
+bill_17 <- as.data.frame(bill_17)
+
+for (i in 1:735) {
+bill_17_legislator <- as.data.frame(unlist(bill_17$legislator[i]))
+colnames(bill_17_legislator) <- "name"
+
+bill_17_main <- as.data.frame(unlist(bill_17$submitter_text[i]))
+colnames(bill_17_main) <- "name"
+
+leftjoined <- left_join(bill_17_legislator, legislator_17[,3:4], by="name")
+leftjoined_main <- left_join(bill_17_main, legislator_17[,3:4], by="name")
+
+match <- leftjoined %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+match_main <- leftjoined_main %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+try(bill_17[i,]$mainparty <- match_main[1,]$party, silent=T)
+try(bill_17[i,]$party1 <- match$n[match$party=="party1"], silent=T)
+try(bill_17[i,]$party2 <- match$n[match$party=="party2"], silent=T)
+try(bill_17[i,]$party3 <- match$n[match$party=="party3"], silent=T)
+try(bill_17[i,]$party4 <- match$n[match$party=="party4"], silent=T)
+try(bill_17[i,]$party5 <- match$n[match$party=="party5"], silent=T)
+try(bill_17[i,]$party6 <- match$n[match$party=="party6"], silent=T)
+try(bill_17[i,]$party7 <- match$n[match$party=="party7"], silent=T)
+try(bill_17[i,]$party8 <- match$n[match$party=="party8"], silent=T)
+try(bill_17[i,]$party9 <- match$n[match$party=="party9"], silent=T)
+try(bill_17[i,]$party10 <- match$n[match$party=="party10"], silent=T)
+try(bill_17[i,]$noparty <- match$n[match$party=="noparty"], silent=T)
+}
+
+write.csv(bill_17[,c(-4,-5,-6)], "bill_17_final.csv")
+```
+
+# 7. Load 18th data and match party-legislator per each bill
+
+```{r, warning=F, message=F}
+bill_18 <- read_excel("bill_18.xlsx")
+
+legislator_18 <- read_excel("legislator_18.xlsx")
+legislator_18$party[legislator_18$party=="민주노동당"] <- "party1"
+legislator_18$party[legislator_18$party=="민주당"] <- "party2"
+legislator_18$party[legislator_18$party=="민주통합당"] <- "party3"
+legislator_18$party[legislator_18$party=="새누리당"] <- "party4"
+legislator_18$party[legislator_18$party=="자유선진당"] <- "party5"
+legislator_18$party[legislator_18$party=="진보신당"] <- "party6"
+legislator_18$party[legislator_18$party=="창조한국당"] <- "party7"
+legislator_18$party[legislator_18$party=="친박연대"] <- "party8"
+legislator_18$party[legislator_18$party=="통합민주당"] <- "party9"
+legislator_18$party[legislator_18$party=="통합진보당"] <- "party10"
+legislator_18$party[legislator_18$party=="한나라당"] <- "party11"
+
+legislator_18$party[legislator_18$party=="무소속"] <- "noparty"
+
+# Transform each submitter and supporter into string vectors
+bill_18$submitter_text <- strsplit(bill_18$submitter_text, " ")
+bill_18$supporter_text <- strsplit(bill_18$supporter_text, " ")
+bill_18$legislator <- strsplit(bill_18$legislator, " ")
+
+bill_18$noparty <- bill_18$party11 <- bill_18$party10 <- bill_18$party9 <- bill_18$party8 <- bill_18$party7 <- bill_18$party6 <- bill_18$party5 <- bill_18$party4 <- bill_18$party3 <- bill_18$party2 <- bill_18$party1 <- 0
+bill_18$mainparty <- NA
+
+bill_18 <- as.data.frame(bill_18)
+
+for (i in 1:1098) {
+bill_18_legislator <- as.data.frame(unlist(bill_18$legislator[i]))
+colnames(bill_18_legislator) <- "name"
+
+bill_18_main <- as.data.frame(unlist(bill_18$submitter_text[i]))
+colnames(bill_18_main) <- "name"
+
+leftjoined <- left_join(bill_18_legislator, legislator_18[,3:4], by="name")
+leftjoined_main <- left_join(bill_18_main, legislator_18[,3:4], by="name")
+
+match <- leftjoined %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+match_main <- leftjoined_main %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+try(bill_18[i,]$mainparty <- match_main[1,]$party, silent=T)
+try(bill_18[i,]$party1 <- match$n[match$party=="party1"], silent=T)
+try(bill_18[i,]$party2 <- match$n[match$party=="party2"], silent=T)
+try(bill_18[i,]$party3 <- match$n[match$party=="party3"], silent=T)
+try(bill_18[i,]$party4 <- match$n[match$party=="party4"], silent=T)
+try(bill_18[i,]$party5 <- match$n[match$party=="party5"], silent=T)
+try(bill_18[i,]$party6 <- match$n[match$party=="party6"], silent=T)
+try(bill_18[i,]$party7 <- match$n[match$party=="party7"], silent=T)
+try(bill_18[i,]$party8 <- match$n[match$party=="party8"], silent=T)
+try(bill_18[i,]$party9 <- match$n[match$party=="party9"], silent=T)
+try(bill_18[i,]$party10 <- match$n[match$party=="party10"], silent=T)
+try(bill_18[i,]$party11 <- match$n[match$party=="party11"], silent=T)
+try(bill_18[i,]$noparty <- match$n[match$party=="noparty"], silent=T)
+}
+
+write.csv(bill_18[,c(-4,-5,-6)], "bill_18_final.csv")
+```
+
+
+# 8. Load 19th data and match party-legislator per each bill
+
+```{r, warning=F, message=F}
+bill_19 <- read_excel("bill_19.xlsx")
+
+legislator_19 <- read_excel("legislator_19.xlsx")
+legislator_19$party[legislator_19$party=="더불어민주당"] <- "party1"
+legislator_19$party[legislator_19$party=="민주당"] <- "party2"
+legislator_19$party[legislator_19$party=="민주통합당"] <- "party3"
+legislator_19$party[legislator_19$party=="새누리당"] <- "party4"
+legislator_19$party[legislator_19$party=="새정치민주연합"] <- "party5"
+legislator_19$party[legislator_19$party=="자유선진당"] <- "party6"
+legislator_19$party[legislator_19$party=="통합진보당"] <- "party7"
+
+legislator_19$party[legislator_19$party=="무소속"] <- "noparty"
+
+# Transform each submitter and supporter into string vectors
+bill_19$submitter_text <- strsplit(bill_19$submitter_text, " ")
+bill_19$supporter_text <- strsplit(bill_19$supporter_text, " ")
+bill_19$legislator <- strsplit(bill_19$legislator, " ")
+
+bill_19$noparty <- bill_19$party7 <- bill_19$party6 <- bill_19$party5 <- bill_19$party4 <- bill_19$party3 <- bill_19$party2 <- bill_19$party1 <- 0
+bill_19$mainparty <- NA
+
+bill_19 <- as.data.frame(bill_19)
+
+for (i in 1:1488) {
+bill_19_legislator <- as.data.frame(unlist(bill_19$legislator[i]))
+colnames(bill_19_legislator) <- "name"
+
+bill_19_main <- as.data.frame(unlist(bill_19$submitter_text[i]))
+colnames(bill_19_main) <- "name"
+
+leftjoined <- left_join(bill_19_legislator, legislator_19[,3:4], by="name")
+leftjoined_main <- left_join(bill_19_main, legislator_19[,3:4], by="name")
+
+match <- leftjoined %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+match_main <- leftjoined_main %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+try(bill_19[i,]$mainparty <- match_main[1,]$party, silent=T)
+try(bill_19[i,]$party1 <- match$n[match$party=="party1"], silent=T)
+try(bill_19[i,]$party2 <- match$n[match$party=="party2"], silent=T)
+try(bill_19[i,]$party3 <- match$n[match$party=="party3"], silent=T)
+try(bill_19[i,]$party4 <- match$n[match$party=="party4"], silent=T)
+try(bill_19[i,]$party5 <- match$n[match$party=="party5"], silent=T)
+try(bill_19[i,]$party6 <- match$n[match$party=="party6"], silent=T)
+try(bill_19[i,]$party7 <- match$n[match$party=="party7"], silent=T)
+try(bill_19[i,]$noparty <- match$n[match$party=="noparty"], silent=T)
+}
+
+write.csv(bill_19[,c(-4,-5,-6)], "bill_19_final.csv")
+```
+
+# 9. Load 20th data and match party-legislator per each bill
+
+```{r, warning=F, message=F}
+bill_20 <- read_excel("bill_20.xlsx")
+
+legislator_20 <- read_excel("legislator_20.xlsx")
+legislator_20$party[legislator_20$party=="국민의당"] <- "party1"
+legislator_20$party[legislator_20$party=="더불어민주당"] <- "party2"
+legislator_20$party[legislator_20$party=="미래통합당"] <- "party3"
+legislator_20$party[legislator_20$party=="민생당"] <- "party4"
+legislator_20$party[legislator_20$party=="바른미래당"] <- "party5"
+legislator_20$party[legislator_20$party=="새누리당"] <- "party6"
+legislator_20$party[legislator_20$party=="자유한국당"] <- "party7"
+legislator_20$party[legislator_20$party=="정의당"] <- "party8"
+
+legislator_20$party[legislator_20$party=="무소속"] <- "noparty"
+
+# Transform each submitter and supporter into string vectors
+bill_20$submitter_text <- strsplit(bill_20$submitter_text, " ")
+bill_20$supporter_text <- strsplit(bill_20$supporter_text, " ")
+bill_20$legislator <- strsplit(bill_20$legislator, " ")
+
+bill_20$noparty <- bill_20$party8 <-bill_20$party7 <- bill_20$party6 <- bill_20$party5 <- bill_20$party4 <- bill_20$party3 <- bill_20$party2 <- bill_20$party1 <- 0
+bill_20$mainparty <- NA
+
+bill_20 <- as.data.frame(bill_20)
+
+for (i in 1:1954) {
+bill_20_legislator <- as.data.frame(unlist(bill_20$legislator[i]))
+colnames(bill_20_legislator) <- "name"
+
+bill_20_main <- as.data.frame(unlist(bill_20$submitter_text[i]))
+colnames(bill_20_main) <- "name"
+
+leftjoined <- left_join(bill_20_legislator, legislator_20[,3:4], by="name")
+leftjoined_main <- left_join(bill_20_main, legislator_20[,3:4], by="name")
+
+match <- leftjoined %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+match_main <- leftjoined_main %>% 
+  na.omit() %>% 
+  group_by(party) %>% 
+  summarize(n=n()) %>% 
+  arrange(desc(n))
+
+try(bill_20[i,]$mainparty <- match_main[1,]$party, silent=T)
+try(bill_20[i,]$party1 <- match$n[match$party=="party1"], silent=T)
+try(bill_20[i,]$party2 <- match$n[match$party=="party2"], silent=T)
+try(bill_20[i,]$party3 <- match$n[match$party=="party3"], silent=T)
+try(bill_20[i,]$party4 <- match$n[match$party=="party4"], silent=T)
+try(bill_20[i,]$party5 <- match$n[match$party=="party5"], silent=T)
+try(bill_20[i,]$party6 <- match$n[match$party=="party6"], silent=T)
+try(bill_20[i,]$party7 <- match$n[match$party=="party7"], silent=T)
+try(bill_20[i,]$party8 <- match$n[match$party=="party7"], silent=T)
+try(bill_20[i,]$noparty <- match$n[match$party=="noparty"], silent=T)
+}
+
+write.csv(bill_20[,c(-4,-5,-6)], "bill_20_final.csv")
+```
