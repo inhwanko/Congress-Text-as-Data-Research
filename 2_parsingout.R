@@ -1,14 +1,7 @@
----
-title: "ParsingOut"
-author: "Inhwan Ko"
-date: 'Aug 13, 2020'
-output: html_document
----
 
-1. Load necessary packages \newline
+# 1. Load necessary packages
+## Installing rJava and KoNLP requires the latest version of Rtools. Please use its version higher than 4.0.
 
-Installing rJava and KoNLP requires the latest version of Rtools. Please use its version higher than 4.0.
-```{r}
 # install.packages(c("tm","backports","tidyverse","tidytext","topicmodels","stringr","lda"))
 
 library(tidyverse)
@@ -25,11 +18,9 @@ library(rJava)
 # remotes::install_github("haven-jeon/KoNLP", upgrade="never", INSTALL_opts=c("--no-multiarch"))
 library(KoNLP)
 
-```
 
-2. 16 ENV
+# 2. 16 ENV
 
-```{r}
 dir <- "C:/Users/inhwa/OneDrive - UW/Research/KorCongress/3rd analysis - minutes/env16" 
 
 env_16 <- VCorpus(DirSource(dir, encoding = "UTF-8"),
@@ -52,11 +43,10 @@ unique_env_16 <- unique(result16)
 
 write.csv(unique_env_16, "env16.csv")
 
-```
 
-3. 17 ENV
 
-```{r}
+# 3. 17 ENV
+
 dir <- "C:/Users/inhwa/OneDrive - UW/Research/KorCongress/3rd analysis - minutes/env17" 
 
 env_17 <- VCorpus(DirSource(dir, encoding = "UTF-8"),
@@ -79,11 +69,10 @@ unique_env_17 <- unique(result17)
 
 write.csv(unique_env_17, "env17.csv")
 
-```
 
-4. 18 ENV
 
-```{r}
+# 4. 18 ENV
+
 dir <- "C:/Users/inhwa/OneDrive - UW/Research/KorCongress/3rd analysis - minutes/env18" 
 
 env_18 <- VCorpus(DirSource(dir, encoding = "UTF-8"),
@@ -106,11 +95,9 @@ unique_env_18 <- unique(result18)
 
 write.csv(unique_env_18, "env18.csv")
 
-```
 
-5. 19 ENV
+# 5. 19 ENV
 
-```{r}
 dir <- "C:/Users/inhwa/OneDrive - UW/Research/KorCongress/3rd analysis - minutes/env19" 
 
 env_19 <- VCorpus(DirSource(dir, encoding = "UTF-8"),
@@ -133,11 +120,9 @@ unique_env_19 <- unique(result19)
 
 write.csv(unique_env_19, "env19.csv")
 
-```
 
-6. 20 ENV
+# 6. 20 ENV
 
-```{r}
 dir <- "C:/Users/inhwa/OneDrive - UW/Research/KorCongress/3rd analysis - minutes/env20" 
 
 env_20 <- VCorpus(DirSource(dir, encoding = "UTF-8"),
@@ -160,11 +145,9 @@ unique_env_20 <- unique(result20)
 
 write.csv(unique_env_20, "env20.csv")
 
-```
 
-7. 16 WEL
+# 7. 16 WEL
 
-```{r}
 dir <- "C:/Users/inhwa/OneDrive - UW/Research/KorCongress/disruptminute/wel16" 
 
 wel_16 <- VCorpus(DirSource(dir, encoding = "UTF-8"),
@@ -186,11 +169,10 @@ result_wel_16 <- data.frame(speaker=speaker, speech=speech)
 unique_wel_16 <- unique(result_wel_16)
 
 write.csv(unique_wel_16, "wel16.csv")
-```
 
-8. 17 WEL
 
-```{r}
+# 8. 17 WEL
+
 dir <- "C:/Users/inhwa/OneDrive - UW/Research/KorCongress/disruptminute/wel17" 
 
 wel_17 <- VCorpus(DirSource(dir, encoding = "UTF-8"),
@@ -212,11 +194,10 @@ result_wel_17 <- data.frame(speaker=speaker, speech=speech)
 unique_wel_17 <- unique(result_wel_17)
 
 write.csv(unique_wel_17, "wel17.csv")
-```
 
-9. 18 WEL
 
-```{r}
+# 9. 18 WEL
+
 dir <- "C:/Users/inhwa/OneDrive - UW/Research/KorCongress/disruptminute/wel18" 
 
 wel_18 <- VCorpus(DirSource(dir, encoding = "UTF-8"),
@@ -238,10 +219,10 @@ result_wel_18 <- data.frame(speaker=speaker, speech=speech)
 unique_wel_18 <- unique(result_wel_18)
 
 write.csv(unique_wel_18, "wel18.csv")
-```
-10. 19 WEL
 
-```{r}
+
+# 10. 19 WEL
+
 dir <- "C:/Users/inhwa/OneDrive - UW/Research/KorCongress/disruptminute/wel19" 
 
 wel_19 <- VCorpus(DirSource(dir, encoding = "UTF-8"),
@@ -263,11 +244,10 @@ result_wel_19 <- data.frame(speaker=speaker, speech=speech)
 unique_wel_19 <- unique(result_wel_19)
 
 write.csv(unique_wel_19, "wel19.csv")
-```
 
-11. 20 WEL
 
-```{r}
+# 11. 20 WEL
+
 dir <- "C:/Users/inhwa/OneDrive - UW/Research/KorCongress/disruptminute/wel20" 
 
 wel_20 <- VCorpus(DirSource(dir, encoding = "UTF-8"),
@@ -289,5 +269,5 @@ result_wel_20 <- data.frame(speaker=speaker, speech=speech)
 unique_wel_20 <- unique(result_wel_20)
 
 write.csv(unique_wel_20, "wel20.csv")
-```
+
 
