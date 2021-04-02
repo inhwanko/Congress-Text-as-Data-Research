@@ -25,11 +25,11 @@ library(readxl)
 
 # 2. Load data
 
-speech_env16 <- read_excel("env_final/env16.xlsx")[,-1]
-speech_env17 <- read_excel("env_final/env17.xlsx")[,-1]
-speech_env18 <- read_excel("env_final/env18.xlsx")[,-1]
-speech_env19 <- read_excel("env_final/env19.xlsx")[,-1]
-speech_env20 <- read_excel("env_final/env20.xlsx")[,-1]
+speech_env16 <- read_excel("env16.csv")[,-1]
+speech_env17 <- read_excel("env17.csv")[,-1]
+speech_env18 <- read_excel("env18.csv")[,-1]
+speech_env19 <- read_excel("env19.csv")[,-1]
+speech_env20 <- read_excel("env20.csv")[,-1]
 
 
 # 3. Operationalize
@@ -417,4 +417,4 @@ sum(speech_env20$totalcondemn[speech_env20$legis==1])
 ### Save all outputs into csv file, such as:
 
 write.csv(speech_env16, "legis_env16.csv")
-write.csv(speech_wel18, "legis_wel18.csv")
+
