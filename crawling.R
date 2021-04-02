@@ -1,3 +1,6 @@
+# Web-crawling code using R Selenium for automated downloading of meeting minutes
+# The authors thank Jisung Kim (Kyungnam University) for useful comments and provision of this code. 
+
 # =========================================== [ setting ] ==========================================================
 # 필터 조건에 대한 설정이 되지않는 페이지 임의로 수정이필요 (반자동화라고 말씀드렸던 이유)
 library(tidyverse); library(RSelenium)
