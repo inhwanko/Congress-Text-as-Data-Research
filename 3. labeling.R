@@ -1,4 +1,4 @@
-#Note: This only contains the environmental committee analysis. You can adopt the same structured code for the welfare committee analysis and the analysis of other issue-area committees as well. 
+# Note: This only contains the environmental committee analysis. You can adopt the same structured code for the welfare committee analysis and the analysis of other issue-area committees as well. 
 
 # 1. Load necessary packages
 
@@ -413,3 +413,8 @@ sum(speech_env19$totalcondemn[speech_env19$legis==1])
 sum(speech_env20$totalcondemn[speech_env20$legis==1])
 
 
+
+### Save all outputs into csv file, such as:
+
+write.csv(speech_env16, "legis_env16.csv")
+write.csv(speech_wel18, "legis_wel18.csv")
