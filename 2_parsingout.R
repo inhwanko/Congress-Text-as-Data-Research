@@ -6,10 +6,8 @@
 
 library(tidyverse)
 library(tidytext)
-library(topicmodels)
 library(tm)
 library(stringr)
-library(lda)
 
 Sys.setenv(JAVA_HOME="C:\\Program Files\\Java\\jre1.8.0_261")
 # install.packages("rJava")
