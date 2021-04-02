@@ -1,6 +1,6 @@
 고인환, 최하예, 강신재. (2021). "자동화된 텍스트 분석을 활용한 국회의원 간 갈등 양상 연구: 17~20대 국회 환경노동위원회와 보건복지위원회 회의록을 중심으로." 한국정당학회보 제20권 1호, 5-42쪽. ([링크](http://www.partystudies.or.kr/contents/bbs/bbs_content.html?bbs_cls_cd=004003&cid=21033117313490&bbs_type=B))  
 
-논문의 저자들은 자료 분석 과정을 투명하게 공개하기 위하여 본 페이지에 사용된 R코드와 데이터셋을 업로드하였습니다. 공개 과정의 투명성을 위해 정제되지 않은 코드를 그대로 올려드렸음을 알려드리며, 번호 순서에 따라 코드를 실행하면 위 논문에 기재된 분석 결과와 동일한 결과를 얻을 수 있습니다. 추후에 하나의 R 스크립트에 코드를 정리하여 보다 쉽게 반복 검증(replication)이 가능하도록 정리할 예정입니다. 코드 및 분석 과정과 관련하여 질문이 있으시다면 inhwanko at uw dot edu 로 연락주시기 바랍니다. 
+논문의 저자들은 자료 분석 과정을 투명하게 공개하기 위하여 본 페이지에 사용된 R코드와 데이터셋을 업로드하였습니다. 공개 과정의 투명성을 위해 정제되지 않은 코드를 그대로 올려드렸음을 알려드리며, 번호 순서에 따라 코드를 실행하면 위 논문에 기재된 분석 결과와 동일한 결과를 얻을 수 있습니다. 추후에 하나의 R 스크립트에 코드를 정리하여 보다 쉽게 반복 검증(replication)이 가능하도록 정리할 예정입니다. 코드 및 분석 과정과 관련하여 질문이 있으시다면 inhwanko at uw dot edu 로 연락주시기 바랍니다. 특히 5번 코드 "regression"과 관련하여, 통계적 결과만을 검증하고자 하시는 연구자께서 env_final.csv 및 wel_final.csv 파일이 필요하시다면 연락 주시기 바랍니다. 
 
 This directory contains R codes and datasets for the replication of the paper, "Analyzing Conflict Patterns among Legislator with Automated Text Analysis: Cases of Environmental and Labor Committee and Health and Welfare Committee of the 17-20th National Assembly of Korea," published in a peer-reviewed journal of the Korean Association of Party Studies.   
 
