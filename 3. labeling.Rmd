@@ -1,9 +1,11 @@
 ---
-title: "Analyzing Interruption and Blaming in Legislative Deliberation Process in South Korea, Environmental and Labor Committee"
+title: "Labeling Interruption and Blaming in Legislative Deliberation Process in South Korea, Environmental and Labor Committee"
 author: "Inhwan Ko"
 date: 'Sep 9th, 2020'
 output: html_document
 ---
+
+Note: This only contains the environmental committee analysis. You can adopt the same structured code for the welfare committee analysis and the analysis of other issue-area committees as well. 
 
 1. Load necessary packages
 
@@ -374,64 +376,7 @@ sum(speech_env20$critgov[speech_env20$legis==1])
 
 ```
 
-7) Misinformation
-
-
-```{r}
-
-speech_env16$misinfo <- speech_env17$misinfo <- speech_env18$misinfo <- speech_env19$misinfo <- speech_env20$misinfo <- 0
-
-for (i in 1:nrow(speech_env16)) {
-  speech_env16$misinfo[i] <- ifelse(
-   sum(grep("왜곡", speech_env16$speech[i]))==1 |
-   sum(grep("거짓", speech_env16$speech[i]))==1 |
-   sum(grep("선동", speech_env16$speech[i]))==1 , 
-  1,0
- )
-}
-
-for (i in 1:nrow(speech_env17)) {
-  speech_env17$misinfo[i] <- ifelse(
-   sum(grep("왜곡", speech_env16$speech[i]))==1 |
-   sum(grep("거짓", speech_env16$speech[i]))==1 |
-   sum(grep("선동", speech_env16$speech[i]))==1 , 
-  1,0
- )
-}
-for (i in 1:nrow(speech_env18)) {
-  speech_env18$misinfo[i] <- ifelse(
-   sum(grep("왜곡", speech_env16$speech[i]))==1 |
-   sum(grep("거짓", speech_env16$speech[i]))==1 |
-   sum(grep("선동", speech_env16$speech[i]))==1 , 
-  1,0
- )
-}
-for (i in 1:nrow(speech_env19)) {
-  speech_env19$misinfo[i] <- ifelse(
-   sum(grep("왜곡", speech_env16$speech[i]))==1 |
-   sum(grep("거짓", speech_env16$speech[i]))==1 |
-   sum(grep("선동", speech_env16$speech[i]))==1 , 
-  1,0
- )
-}
-for (i in 1:nrow(speech_env20)) {
-  speech_env20$misinfo[i] <- ifelse(
-   sum(grep("왜곡", speech_env16$speech[i]))==1 |
-   sum(grep("거짓", speech_env16$speech[i]))==1 |
-   sum(grep("선동", speech_env16$speech[i]))==1 , 
-  1,0
- )
-}
-
-sum(speech_env16$misinfo[speech_env16$legis==1])
-sum(speech_env17$misinfo[speech_env17$legis==1])
-sum(speech_env18$misinfo[speech_env18$legis==1])
-sum(speech_env19$misinfo[speech_env19$legis==1])
-sum(speech_env20$misinfo[speech_env20$legis==1])
-
-```
-
-8) Total condemnation
+7) Total condemnation
 
 ```{r}
 
