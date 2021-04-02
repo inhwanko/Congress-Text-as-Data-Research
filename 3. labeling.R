@@ -1,15 +1,8 @@
----
-title: "Labeling Interruption and Blaming in Legislative Deliberation Process in South Korea, Environmental and Labor Committee"
-author: "Inhwan Ko"
-date: 'Sep 9th, 2020'
-output: html_document
----
+#Note: This only contains the environmental committee analysis. You can adopt the same structured code for the welfare committee analysis and the analysis of other issue-area committees as well. 
 
-Note: This only contains the environmental committee analysis. You can adopt the same structured code for the welfare committee analysis and the analysis of other issue-area committees as well. 
+# 1. Load necessary packages
 
-1. Load necessary packages
 
-```{r}
 # rm(list=ls())
 # install.packages(c("tm","backports","tidyverse","tidytext","topicmodels","stringr","lda"))
 
@@ -28,24 +21,21 @@ library(rJava)
 library(KoNLP)
 library(readxl)
 
-```
 
 
-2. Load data
+# 2. Load data
 
-```{r}
 speech_env16 <- read_excel("env_final/env16.xlsx")[,-1]
 speech_env17 <- read_excel("env_final/env17.xlsx")[,-1]
 speech_env18 <- read_excel("env_final/env18.xlsx")[,-1]
 speech_env19 <- read_excel("env_final/env19.xlsx")[,-1]
 speech_env20 <- read_excel("env_final/env20.xlsx")[,-1]
-```
 
-3. Operationalize
 
-1) Numbering
+# 3. Operationalize
 
-```{r}
+## 1) Numbering
+
 speech_env16$no <- speech_env17$no <- speech_env18$no <- speech_env19$no <- speech_env20$no <- NA
 
 speech_env16$no <- c(1:nrow(speech_env16)) 
@@ -53,11 +43,10 @@ speech_env17$no <- c(1:nrow(speech_env17))
 speech_env18$no <- c(1:nrow(speech_env18))
 speech_env19$no <- c(1:nrow(speech_env19))
 speech_env20$no <- c(1:nrow(speech_env20))
-```
 
-2) Legislator or not (1-0)- binary
 
-```{r}
+## 2) Legislator or not (1-0)- binary
+
 speech_env16$legis <- speech_env17$legis <- speech_env18$legis <- speech_env19$legis <- speech_env20$legis <- 0
 
 for (i in 1:nrow(speech_env16)) {
@@ -136,11 +125,9 @@ sum(speech_env18$legis) #24635 / 38282, 0.6435
 sum(speech_env19$legis) #41138 / 63451, 0.6483
 sum(speech_env20$legis) #16241 / 24628, 0.6594
 
-```
 
-3) Interruption (by parcing out "......")
 
-```{r}
+## 3) Interruption (by parcing out "......")
 
 speech_env16$interrupt <- speech_env17$interrupt <- speech_env18$interrupt <- speech_env19$interrupt <- speech_env20$interrupt <- NA
 
@@ -187,11 +174,9 @@ sum(speech_env18$interrupt[speech_env18$legis==1])
 sum(speech_env19$interrupt[speech_env19$legis==1])
 sum(speech_env20$interrupt[speech_env20$legis==1])
 
-```
 
-4) Blaming (using dictionary method) 
+## 4) Blaming (using dictionary method) 
 
-```{r}
 speech_env16$blame <- speech_env17$blame <- speech_env18$blame <- speech_env19$blame <- speech_env20$blame <- 0
 
 for (i in 1:nrow(speech_env16)) {
@@ -252,11 +237,8 @@ sum(speech_env18$blame[speech_env18$legis==1])
 sum(speech_env19$blame[speech_env19$legis==1])
 sum(speech_env20$blame[speech_env20$legis==1])
 
-```
 
-5) Criticizing the assembly
-
-```{r}
+## 5) Criticizing the assembly
 
 speech_env16$critique <- speech_env17$critique <- speech_env18$critique <- speech_env19$critique <- speech_env20$critique <- 0
 
@@ -323,11 +305,8 @@ sum(speech_env18$critique[speech_env18$legis==1])
 sum(speech_env19$critique[speech_env19$legis==1])
 sum(speech_env20$critique[speech_env20$legis==1])
 
-```
 
-6) Criticizing the government
-
-```{r}
+## 6) Criticizing the government
 
 speech_env16$critgov <- speech_env17$critgov <- speech_env18$critgov <- speech_env19$critgov <- speech_env20$critgov <- 0
 
@@ -374,11 +353,9 @@ sum(speech_env18$critgov[speech_env18$legis==1])
 sum(speech_env19$critgov[speech_env19$legis==1])
 sum(speech_env20$critgov[speech_env20$legis==1])
 
-```
 
-7) Total condemnation
 
-```{r}
+## 7) Total condemnation
 
 speech_env16$totalcondemn <- speech_env17$totalcondemn <- speech_env18$totalcondemn <- speech_env19$totalcondemn <- speech_env20$totalcondemn <- 0
 
@@ -434,5 +411,5 @@ sum(speech_env17$totalcondemn[speech_env17$legis==1])
 sum(speech_env18$totalcondemn[speech_env18$legis==1])
 sum(speech_env19$totalcondemn[speech_env19$legis==1])
 sum(speech_env20$totalcondemn[speech_env20$legis==1])
-```
+
 
