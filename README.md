@@ -7,6 +7,7 @@ This directory contains R codes and datasets for the replication of the paper, "
 
 Please contact inhwanko at uw dot edu for more information.   
 
+![alt text](https://github.com/inhwanko/Congress-Text-as-Data-Research/blob/master/workflow.jpg)
 
 ## 자동화된 텍스트 분석을 활용한 국회의원 간 갈등 양상 연구: 17～20대 국회 환경노동위원회와 보건복지위원회 회의록을 중심으로  
 
