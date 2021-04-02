@@ -1,4 +1,5 @@
-# Note: This only contains the environmental committee analysis. You can adopt the same structured code for the welfare committee analysis and the analysis of other issue-area committees as well. 
+# Note: This only contains the environmental committee analysis. You can adopt the same structured code for the welfare committee analysis 
+# and the analysis of other issue-area committees as well. 
 
 # 1. Load necessary packages
 
